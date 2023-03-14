@@ -53,9 +53,9 @@
             this.dotsButton.Text = "Точки";
             this.dotsButton.UseVisualStyleBackColor = false;
             this.dotsButton.Click += new System.EventHandler(this.Button1_Click);
-            this.dotsButton.Paint += new System.Windows.Forms.PaintEventHandler(this.dotsButton_Paint);
-            this.dotsButton.MouseLeave += new System.EventHandler(this.dotsButton_MouseLeave);
-            this.dotsButton.MouseHover += new System.EventHandler(this.dotsButton_MouseHover);
+            this.dotsButton.Paint += new System.Windows.Forms.PaintEventHandler(this.DotsButton_Paint);
+            this.dotsButton.MouseLeave += new System.EventHandler(this.DotsButton_MouseLeave);
+            this.dotsButton.MouseHover += new System.EventHandler(this.DotsButton_MouseHover);
             // 
             // button2
             // 
@@ -68,8 +68,8 @@
             this.button2.TabIndex = 1;
             this.button2.Text = "Параметры";
             this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            this.button2.Paint += new System.Windows.Forms.PaintEventHandler(this.button2_Paint);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
+            this.button2.Paint += new System.Windows.Forms.PaintEventHandler(this.Button2_Paint);
             // 
             // button3
             // 
@@ -82,7 +82,7 @@
             this.button3.TabIndex = 2;
             this.button3.Text = "Движение";
             this.button3.UseVisualStyleBackColor = false;
-            this.button3.Paint += new System.Windows.Forms.PaintEventHandler(this.button3_Paint);
+            this.button3.Paint += new System.Windows.Forms.PaintEventHandler(this.Button3_Paint);
             // 
             // button4
             // 
@@ -95,8 +95,8 @@
             this.button4.TabIndex = 3;
             this.button4.Text = "Очистить";
             this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            this.button4.Paint += new System.Windows.Forms.PaintEventHandler(this.button4_Paint);
+            this.button4.Click += new System.EventHandler(this.Clear_Click);
+            this.button4.Paint += new System.Windows.Forms.PaintEventHandler(this.Button4_Paint);
             // 
             // button5
             // 
@@ -109,8 +109,8 @@
             this.button5.TabIndex = 4;
             this.button5.Text = "Кривая";
             this.button5.UseVisualStyleBackColor = false;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            this.button5.Paint += new System.Windows.Forms.PaintEventHandler(this.button5_Paint);
+            this.button5.Click += new System.EventHandler(this.Curve_Click);
+            this.button5.Paint += new System.Windows.Forms.PaintEventHandler(this.Button5_Paint);
             // 
             // button6
             // 
@@ -123,8 +123,8 @@
             this.button6.TabIndex = 5;
             this.button6.Text = "Ломанная";
             this.button6.UseVisualStyleBackColor = false;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            this.button6.Paint += new System.Windows.Forms.PaintEventHandler(this.button6_Paint);
+            this.button6.Click += new System.EventHandler(this.Polygon_Click);
+            this.button6.Paint += new System.Windows.Forms.PaintEventHandler(this.Button6_Paint);
             // 
             // button7
             // 
@@ -137,8 +137,8 @@
             this.button7.TabIndex = 6;
             this.button7.Text = "Бейзеры";
             this.button7.UseVisualStyleBackColor = false;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            this.button7.Paint += new System.Windows.Forms.PaintEventHandler(this.button7_Paint);
+            this.button7.Click += new System.EventHandler(this.Beziers_Click);
+            this.button7.Paint += new System.Windows.Forms.PaintEventHandler(this.Button7_Paint);
             // 
             // button8
             // 
@@ -151,7 +151,8 @@
             this.button8.TabIndex = 7;
             this.button8.Text = "Закрашенная";
             this.button8.UseVisualStyleBackColor = false;
-            this.button8.Paint += new System.Windows.Forms.PaintEventHandler(this.button8_Paint);
+            this.button8.Click += new System.EventHandler(this.FillCurve_Click);
+            this.button8.Paint += new System.Windows.Forms.PaintEventHandler(this.Button8_Paint);
             // 
             // pictureBox1
             // 
@@ -161,8 +162,8 @@
             this.pictureBox1.Size = new System.Drawing.Size(1376, 1000);
             this.pictureBox1.TabIndex = 8;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+            this.pictureBox1.Click += new System.EventHandler(this.PictureBox1_Click);
+            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PictureBox1_MouseClick);
             // 
             // Form1
             // 

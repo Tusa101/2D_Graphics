@@ -23,15 +23,25 @@ namespace _2D_Graphics
         private static bool LockPainting = false;
         private static Point[] points = new Point[] { };
         
-        private static int _paintBrush = 4;
-        public int PaintBrush 
+        private static int _paintPenSize = 4;
+        public int PaintPenSize 
         {
             get
             {
-                return _paintBrush;
+                return _paintPenSize;
             }
             set
-            { _paintBrush = value; }
+            { _paintPenSize = value; }
+        }
+        private static int _paintLineSize = 4;
+        public int PaintLineSize
+        {
+            get
+            {
+                return _paintLineSize;
+            }
+            set
+            { _paintLineSize = value; }
         }
         public Form1()
         {

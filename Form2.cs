@@ -87,16 +87,17 @@ namespace _2D_Graphics
             label4.Text = String.Format("Текущее значение: {0}", PrevTrackBar2Value);
         }
 
-        private void trackBar1_Scroll(object sender, EventArgs e)
+        private void TrackBar1_Scroll(object sender, EventArgs e)
         {
             label2.Text = String.Format("Текущее значение: {0}", trackBar1.Value);
             PrevTrackBar1Value = trackBar1.Value;
+            (this.Owner as Form1).PaintLineSize = trackBar1.Value;
         }
 
-        private void trackBar2_Scroll(object sender, EventArgs e)
+        private void TrackBar2_Scroll(object sender, EventArgs e)
         {
             label4.Text = String.Format("Текущее значение: {0}", trackBar2.Value);
-            (this.Owner as Form1).PaintBrush = trackBar2.Value;
+            (this.Owner as Form1).PaintPenSize = trackBar2.Value;
             PrevTrackBar2Value = trackBar2.Value;
         }
     }
