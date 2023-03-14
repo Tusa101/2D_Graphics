@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
@@ -13,13 +13,45 @@ using System.Windows.Forms.VisualStyles;
 namespace _2D_Graphics
 {
     public partial class Form1 : Form
-    {
+    {   
+        private static int _moveSpeed = 5;
+        private static int _direction = (new Random()).Next(0,3);
         private static bool _beziersDone = false;
+        private static bool _curveDone = false;
+        private static bool _polygonDone = false;
+        private static bool _curveFilledDone = false;
+        private static int _draggingPoint;
+        private static bool _movingPoint;
+
+        public Size ButtonDefaultSize
+        { get; set; }
+        public Point ButtonDefaultLocation
+        { get; set; }
+        public Size PaintFieldDefaultSize
+        { get; set; }
+        public Point PaintFieldDefaultLocation
+        { get; set; }
         public bool BeziersDone
         {
             get { return _beziersDone; }
             set { _beziersDone = value;}
         }
+        public bool CurveDone
+        {
+            get { return _curveDone; }
+            set { _curveDone = value; }
+        }
+        public bool PolygonDone
+        {
+            get { return _polygonDone; }
+            set { _polygonDone = value; }
+        }
+        public bool CurveFilledDone
+        {
+            get { return _curveFilledDone; }
+            set { _curveFilledDone = value; }
+        }
+
         private static bool LockPainting = false;
         private static Point[] points = new Point[] { };
         
@@ -43,78 +75,241 @@ namespace _2D_Graphics
             set
             { _paintLineSize = value; }
         }
+        
         public Form1()
         {
             this.InitializeComponent();
             //Text = (('T' + 'A') % 8).ToString();//5 var
-            this.Size = new Size(1280, 720);
-            FormBorderStyle = FormBorderStyle.Fixed3D;
-
+            
+            FormBorderStyle = FormBorderStyle.Sizable;
+            SizeGripStyle = SizeGripStyle.Hide;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = ColorTranslator.FromHtml("#c3f5ff");
-            this.FormBorderStyle = FormBorderStyle.Fixed3D;
-            this.MinimumSize = new Size(600, 600);
-            this.MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            this.MinimumSize = new Size(Screen.PrimaryScreen.WorkingArea.Size.Width /2, Screen.PrimaryScreen.WorkingArea.Size.Height/2);
             
 
-            Size size = new Size(dotsButton.Width * 1280 / 1920, dotsButton.Height * 600 / 1080);
-
+            Size = new Size(Screen.PrimaryScreen.WorkingArea.Size.Width, Screen.PrimaryScreen.WorkingArea.Size.Height);
+            ButtonDefaultSize = new Size(400, Screen.PrimaryScreen.WorkingArea.Height / 11);
+            Size size = ButtonDefaultSize;
 
             dotsButton.Size = size;
-            button2.Size = size;
-            button3.Size = size;
-            button4.Size = size;
-            button5.Size = size;
-            button6.Size = size;
-            button7.Size = size;
-            button8.Size = size;
+            paramsButton.Size = size;
+            movePaintingButton.Size = size;
+            clearButton.Size = size;
+            curveButton.Size = size;
+            polygonButton.Size = size;
+            beizerButton.Size = size;
+            filledCurveButton.Size = size;
+            traceButton.Size = size;
 
-            dotsButton.Location = new Point(dotsButton.Location.X, dotsButton.Location.Y * this.Height / 1080 - 10);
-            button2.Location = new Point(button2.Location.X, button2.Location.Y * this.Height / 1080 - 10);
-            button3.Location = new Point(button3.Location.X, button3.Location.Y * this.Height / 1080 - 10);
-            button4.Location = new Point(button4.Location.X, button4.Location.Y * this.Height / 1080 - 10);
-            button5.Location = new Point(button5.Location.X, button5.Location.Y * this.Height / 1080 - 10);
-            button6.Location = new Point(button6.Location.X, button6.Location.Y * this.Height / 1080 - 10);
-            button7.Location = new Point(button7.Location.X, button7.Location.Y * this.Height / 1080 - 10);
-            button8.Location = new Point(button8.Location.X, button8.Location.Y * this.Height / 1080 - 10);
-            pictureBox1.Location = new Point(pictureBox1.Location.X * 1280 / 1920, dotsButton.Location.Y + dotsButton.Height / 2);
-            pictureBox1.Size = new Size(pictureBox1.Width * 1280 / 1920, button8.Location.Y);
+            ButtonDefaultLocation = new Point(dotsButton.Location.X,
+                                              Screen.PrimaryScreen.WorkingArea.Height / 9 -
+                                              Screen.PrimaryScreen.WorkingArea.Height / 10);
+
+            dotsButton.Location = new Point(ButtonDefaultLocation.X, 
+                                            ButtonDefaultLocation.Y);
+            
+            paramsButton.Location = MakeButtonLocation(1, 2);
+            movePaintingButton.Location = MakeButtonLocation(2, 3);
+            clearButton.Location = MakeButtonLocation(3, 4);
+            curveButton.Location = MakeButtonLocation(4, 5);
+            polygonButton.Location = MakeButtonLocation(5, 6);
+            beizerButton.Location = MakeButtonLocation(6, 7);
+            filledCurveButton.Location = MakeButtonLocation(7, 8);
+            traceButton.Location = MakeButtonLocation(8, 9);
+            //PictureBox1 pictureBox1 = new PictureBox1();
+            //pictureBox1.DoubleBufferedPicture = true;
+            //paintingField.Dou
+            //paintingField.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, value);
+            //paintingField.CreateControl();
+            
+            PaintFieldDefaultLocation = new Point(ButtonDefaultLocation.X +
+                                             dotsButton.Width +
+                                             Screen.PrimaryScreen.WorkingArea.Height / 9 -
+                                             Screen.PrimaryScreen.WorkingArea.Height / 10,
+                                             dotsButton.Location.Y + dotsButton.Height / 2);
+            PaintFieldDefaultSize = new Size(Screen.PrimaryScreen.WorkingArea.Width -
+                                        paintingField.Location.X -
+                                        2 * (Screen.PrimaryScreen.WorkingArea.Height / 9 -
+                                        Screen.PrimaryScreen.WorkingArea.Height / 10),
+                                        filledCurveButton.Location.Y);
+            paintingField.Location = PaintFieldDefaultLocation;
+            paintingField.Size = PaintFieldDefaultSize;
+
             dotsButton.BackColor = ColorTranslator.FromHtml("#C3F5FF");
-            button2.BackColor = ColorTranslator.FromHtml("#C3F5FF");
-            button3.BackColor = ColorTranslator.FromHtml("#C3F5FF");
-            button4.BackColor = ColorTranslator.FromHtml("#C3F5FF");
-            button5.BackColor = ColorTranslator.FromHtml("#C3F5FF");
-            button6.BackColor = ColorTranslator.FromHtml("#C3F5FF");
-            button7.BackColor = ColorTranslator.FromHtml("#C3F5FF");
-            button8.BackColor = ColorTranslator.FromHtml("#C3F5FF");
+            paramsButton.BackColor = ColorTranslator.FromHtml("#C3F5FF");
+            movePaintingButton.BackColor = ColorTranslator.FromHtml("#C3F5FF");
+            clearButton.BackColor = ColorTranslator.FromHtml("#C3F5FF");
+            curveButton.BackColor = ColorTranslator.FromHtml("#C3F5FF");
+            polygonButton.BackColor = ColorTranslator.FromHtml("#C3F5FF");
+            beizerButton.BackColor = ColorTranslator.FromHtml("#C3F5FF");
+            filledCurveButton.BackColor = ColorTranslator.FromHtml("#C3F5FF");
+            traceButton.BackColor = ColorTranslator.FromHtml("#C3F5FF");
 
             dotsButton.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
-            button2.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
-            button3.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
-            button4.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
-            button5.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
-            button6.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
-            button7.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
-            button8.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
+            paramsButton.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
+            movePaintingButton.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
+            clearButton.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
+            curveButton.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
+            polygonButton.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
+            beizerButton.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
+            filledCurveButton.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
+            traceButton.ForeColor = ColorTranslator.FromHtml("#1A9CB6");
 
             dotsButton.Text = "Точки";
-            button2.Text = "Параметры";
-            button3.Text = "Движение";
-            button4.Text = "Очистить";
-            button5.Text = "Кривая";
-            button6.Text = "Ломанная";
-            button7.Text = "Бейзеры";
-            button8.Text = "Закрашенная";
+            paramsButton.Text = "Параметры";
+            movePaintingButton.Text = "Движение";
+            clearButton.Text = "Очистить";
+            curveButton.Text = "Кривая";
+            polygonButton.Text = "Ломанная";
+            beizerButton.Text = "Бейзеры";
+            filledCurveButton.Text = "Закрашенная";
+            traceButton.Text = "След";
 
             dotsButton.Font = new Font("Ermilov", 20);
-            button2.Font = new Font("Ermilov", 20);
-            button3.Font = new Font("Ermilov", 20);
-            button4.Font = new Font("Ermilov", 20);
-            button5.Font = new Font("Ermilov", 20);
-            button6.Font = new Font("Ermilov", 20);
-            button7.Font = new Font("Ermilov", 20);
-            button8.Font = new Font("Ermilov", 20);
+            paramsButton.Font = new Font("Ermilov", 20);
+            movePaintingButton.Font = new Font("Ermilov", 20);
+            clearButton.Font = new Font("Ermilov", 20);
+            curveButton.Font = new Font("Ermilov", 20);
+            polygonButton.Font = new Font("Ermilov", 20);
+            beizerButton.Font = new Font("Ermilov", 20);
+            filledCurveButton.Font = new Font("Ermilov", 20);
+            traceButton.Font = new Font("Ermilov", 20);
+            DoubleBuffered = true;
+        }
+        private void Form1_SizeChanged(object sender, EventArgs e)
+        {
+            dotsButton.Size = new Size(ButtonDefaultSize.Width * this.Width / Screen.PrimaryScreen.WorkingArea.Width, 
+                                       ButtonDefaultSize.Height* this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            paramsButton.Size = new Size(ButtonDefaultSize.Width * this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                       ButtonDefaultSize.Height * this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            movePaintingButton.Size = new Size(ButtonDefaultSize.Width * this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                       ButtonDefaultSize.Height * this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            clearButton.Size = new Size(ButtonDefaultSize.Width * this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                       ButtonDefaultSize.Height * this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            curveButton.Size = new Size(ButtonDefaultSize.Width * this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                       ButtonDefaultSize.Height * this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            polygonButton.Size = new Size(ButtonDefaultSize.Width * this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                       ButtonDefaultSize.Height * this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            beizerButton.Size = new Size(ButtonDefaultSize.Width * this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                       ButtonDefaultSize.Height * this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            filledCurveButton.Size = new Size(ButtonDefaultSize.Width * this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                       ButtonDefaultSize.Height * this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            traceButton.Size = new Size(ButtonDefaultSize.Width * this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                       ButtonDefaultSize.Height * this.Height / Screen.PrimaryScreen.WorkingArea.Height);
 
+            dotsButton.Location = new Point(ButtonDefaultLocation.X* this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                            ButtonDefaultLocation.Y * this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            Point[] temp = new Point[7];
+            for (int i = 0; i < 7; i++)
+            {
+                temp[i] = MakeButtonLocation(i + 1, i + 2);
+            }
+            paramsButton.Location = new Point(temp[0].X* 
+                                         this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                         temp[0].Y * 
+                                         this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            movePaintingButton.Location = new Point(temp[1].X *
+                                         this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                         temp[1].Y *
+                                         this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            clearButton.Location = new Point(temp[2].X *
+                                         this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                         temp[2].Y *
+                                         this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            curveButton.Location = new Point(temp[3].X *
+                                         this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                         temp[3].Y *
+                                         this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            polygonButton.Location = new Point(temp[4].X *
+                                         this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                         temp[4].Y *
+                                         this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            beizerButton.Location = new Point(temp[5].X *
+                                         this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                         temp[5].Y *
+                                         this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            filledCurveButton.Location = new Point(temp[6].X *
+                                         this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                         temp[6].Y *
+                                         this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+            traceButton.Location = new Point(temp[6].X *
+                                         this.Width / Screen.PrimaryScreen.WorkingArea.Width,
+                                         temp[6].Y *
+                                         this.Height / Screen.PrimaryScreen.WorkingArea.Height);
+
+            paintingField.Size = new Size(Screen.PrimaryScreen.WorkingArea.Width -
+                                        paintingField.Location.X -
+                                        2 * (Screen.PrimaryScreen.WorkingArea.Height / 9 -
+                                        Screen.PrimaryScreen.WorkingArea.Height / 10),
+                                        filledCurveButton.Location.Y);
+            paintingField.Location = new Point(ButtonDefaultLocation.X +
+                                             dotsButton.Width +
+                                             Screen.PrimaryScreen.WorkingArea.Height / 9 -
+                                             Screen.PrimaryScreen.WorkingArea.Height / 10,
+                                             dotsButton.Location.Y + dotsButton.Height / 2);
+        }
+        public Point MakeButtonLocation(int buttonNumberMinus1, int buttonNumberMinus2)
+        {
+            return new Point(ButtonDefaultLocation.X,
+                       dotsButton.Height * buttonNumberMinus1 +
+                       (Screen.PrimaryScreen.WorkingArea.Height / 9 -
+                       Screen.PrimaryScreen.WorkingArea.Height / 10) * 
+                       buttonNumberMinus2);
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            if (points.Length!=0) 
+            {
+                Graphics g = paintingField.CreateGraphics();
+                Pen pDots = new Pen(color: ColorTranslator.FromHtml("#1A9CB6"), width: PaintPenSize);
+                Pen pLine = new Pen(color: ColorTranslator.FromHtml("#1A9CB6"), width: PaintLineSize);
+                Brush brushDots = new SolidBrush(color: ColorTranslator.FromHtml("#1A9CB6"));
+                Brush brushFilled = new SolidBrush(color: ColorTranslator.FromHtml("#23cbff"));
+                for (int i = 0; i < points.Length; i++)
+                {
+                    DrawDot(g, pDots, brushDots, points[i]);
+                }                
+                if (BeziersDone)
+                {
+                    try
+                    {
+                        g.DrawBeziers(pLine, points);
+                    }
+                    catch (Exception)
+                    { }   
+                }
+                if (CurveDone)
+                {
+                    try
+                    {
+                        g.DrawClosedCurve(pLine, points);
+                    }
+                    catch (Exception)
+                    { }
+                }
+                if (CurveFilledDone)
+                {
+
+                    try
+                    {
+                        g.FillClosedCurve(brushFilled, points);
+                        g.DrawClosedCurve(pLine, points);
+                    }
+                    catch (Exception)
+                    { }
+                }
+                if (PolygonDone)
+                {
+                    try
+                    {
+                        g.DrawPolygon(pLine, points);
+                    }
+                    catch (Exception)
+                    { }
+                }
+            }
         }
 
         

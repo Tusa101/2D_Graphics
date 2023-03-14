@@ -45,6 +45,7 @@
             this.trackBar1.Size = new System.Drawing.Size(300, 56);
             this.trackBar1.TabIndex = 0;
             this.trackBar1.Scroll += new System.EventHandler(this.TrackBar1_Scroll);
+            
             // 
             // label1
             // 

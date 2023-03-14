@@ -92,6 +92,8 @@ namespace _2D_Graphics
             label2.Text = String.Format("Текущее значение: {0}", trackBar1.Value);
             PrevTrackBar1Value = trackBar1.Value;
             (this.Owner as Form1).PaintLineSize = trackBar1.Value;
+            (this.Owner as Form1).Refresh();
+
         }
 
         private void TrackBar2_Scroll(object sender, EventArgs e)
@@ -99,6 +101,8 @@ namespace _2D_Graphics
             label4.Text = String.Format("Текущее значение: {0}", trackBar2.Value);
             (this.Owner as Form1).PaintPenSize = trackBar2.Value;
             PrevTrackBar2Value = trackBar2.Value;
+            (this.Owner as Form1).Refresh();
+
         }
     }
 }
