@@ -16,6 +16,7 @@ namespace _2D_Graphics
     {   
         private static int _movingSpeed = 5;
         private static bool _movingEnabled = false;
+        private static bool _movingTraceEnabled = false;
         private static int _direction = (new Random()).Next(0,3);
         private static bool _beziersDone = false;
         private static bool _curveDone = false;
@@ -354,8 +355,8 @@ namespace _2D_Graphics
         {
             Graphics graphics = traceButton.CreateGraphics();
             DrawPressedBorder(graphics, traceButton);
-            _movingEnabled = !_movingEnabled;
-            if (_movingEnabled)
+            _movingTraceEnabled = !_movingTraceEnabled;
+            if (_movingTraceEnabled)
             {
                 traceTimer.Interval = 5;
                 traceTimer.Start();

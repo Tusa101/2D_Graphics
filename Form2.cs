@@ -124,6 +124,7 @@ namespace _2D_Graphics
             
             PrevTrackBar1Value = trackBar1.Value;
             (this.Owner as Form1).PaintLineSize = trackBar1.Value;
+            (this.Owner as Form1).Refresh();
             this.Close();
         }
 
@@ -131,9 +132,17 @@ namespace _2D_Graphics
         {
             if (!_applyDone)
             {
-                (this.Owner as Form1).PaintPenSize = PrevTrackBar1Value;
-                (this.Owner as Form1).PaintLineSize = PrevTrackBar2Value;
+                (this.Owner as Form1).PaintPenSize = PrevTrackBar2Value;
+                (this.Owner as Form1).PaintLineSize = PrevTrackBar1Value;
                 (this.Owner as Form1).Refresh();
+                _applyDone = false;
+            }
+            else
+            {
+                (this.Owner as Form1).PaintPenSize = trackBar2.Value;
+                (this.Owner as Form1).PaintLineSize = trackBar1.Value;
+                (this.Owner as Form1).Refresh();
+                _applyDone = false;
             }
             
         }

@@ -18,14 +18,6 @@ namespace _2D_Graphics
         {
             switch (e.KeyCode)
             {
-                case Keys.Space:
-                    {
-                        movePaintingButton.PerformClick();
-                        e.Handled = true;
-                        
-
-                    }
-                    break;
                 case Keys.Oemplus:
                     {
                         _movingSpeed++;
@@ -46,26 +38,22 @@ namespace _2D_Graphics
                         e.Handled = true;
                     }
                     break;
-                case Keys.Up:
-                    {
-                        if (_movingEnabled)
-                        {
-                            _movingSpeed++;
-                            Text = String.Format("Speed: {0}", _movingSpeed.ToString());
-                        }
-                        e.Handled = true;
-                    }
-                    break;
-                case Keys.Down:
-                    {
-                        if (_movingEnabled)
-                        {
-                            _movingSpeed--;
-                            Text = String.Format("Speed: {0}", _movingSpeed.ToString());
-                        }
-                        e.Handled = true;
-                    }
-                    break;
+                //case Keys.Up:
+                //    {
+                        
+                //        //e.Handled = true;
+                //    }
+                //    break;
+                //case Keys.Down:
+                //    {
+                //        if (_movingEnabled)
+                //        {
+                //            _direction = Math.Abs((_direction - 1) % 4);
+                //            Text = String.Format("Speed: {0}", _movingSpeed.ToString());
+                //        }
+                //        e.Handled = true;
+                //    }
+                //    break;
                 default:
                     break;
                     
@@ -76,9 +64,33 @@ namespace _2D_Graphics
             bool IsHandled = true;
             switch (msg.WParam.ToInt32())
             {
-                default: 
-                    IsHandled = false; 
+                case (0x20):
+                    {
+                        movePaintingButton.PerformClick();
+                        IsHandled = true;
+                    }
                     break;
+                case (38):
+                    {
+                        if (_movingEnabled)
+                        {
+                            _direction = Math.Abs((_direction + 1) % 4+1);
+                            Text = String.Format("Direction: {0}", _direction.ToString());
+                        }
+                        IsHandled = true;
+                    }break;
+                case (40):
+                    {
+                        if (_movingEnabled)
+                        {
+                            _direction = Math.Abs((_direction - 1) % 4 + 1);
+                            Text = String.Format("Direction: {0}", _direction.ToString());
+                        }
+                        IsHandled = true;
+                    }
+                    break;
+                default: 
+                    IsHandled = false; break;
             }
             return IsHandled;
         }

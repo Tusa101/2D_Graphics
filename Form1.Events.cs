@@ -189,30 +189,27 @@ namespace _2D_Graphics
             for (int i = 0; i < points.Length; i++)
             {
 
+                Random random = new Random();
                 if (points[i].X + _movingSpeed <= 0)
                 {
-                    Random random = new Random();
                     temp[0] = 1;
                     temp[1] = 2;
                     _direction = temp[random.Next(0, 1)];
                 }
                 if (points[i].Y + _movingSpeed <= 0)
                 {
-                    Random random = new Random();
                     temp[0] = 1;
                     temp[1] = 4;
                     _direction = temp[random.Next(0, 1)];
                 }
                 if (points[i].X + _movingSpeed >= paintingField.Width)
                 {
-                    Random random = new Random();
                     temp[0] = 3;
                     temp[1] = 4;
                     _direction = temp[random.Next(0, 1)];
                 }
                 if (points[i].Y + _movingSpeed >= paintingField.Height)
                 {
-                    Random random = new Random();
                     temp[0] = 2;
                     temp[1] = 4;
                     _direction = temp[random.Next(0, 1)];
@@ -430,10 +427,11 @@ namespace _2D_Graphics
 
         private void Curve_Click(object sender, EventArgs e)
         {
-            Refresh();
+            
             BeziersDone = false;
             CurveFilledDone = false;
             PolygonDone = false;
+            Refresh();
             Graphics g = paintingField.CreateGraphics();
             Pen p = new Pen(color: ColorTranslator.FromHtml("#1A9CB6"), width: PaintLineSize);
             try
@@ -465,11 +463,12 @@ namespace _2D_Graphics
         }
         private void Polygon_Click(object sender, EventArgs e)
         {
-            Refresh();
+            
             DrawPressedBorder(polygonButton.CreateGraphics(), polygonButton);
             CurveDone = false;
             BeziersDone = false;
             CurveFilledDone = false;
+            Refresh();
             Graphics g = paintingField.CreateGraphics();
             Pen p = new Pen(color: ColorTranslator.FromHtml("#1A9CB6"), width: PaintLineSize);
             try
@@ -482,11 +481,10 @@ namespace _2D_Graphics
         }
         private void Beziers_Click(object sender, EventArgs e)
         {
-            Refresh();
-            
             CurveDone = false;
             CurveFilledDone = false;
             PolygonDone = false;
+            Refresh();
             Graphics g = paintingField.CreateGraphics();
             DrawPressedBorder(beizerButton.CreateGraphics(), beizerButton);
             Pen p = new Pen(color: ColorTranslator.FromHtml("#1A9CB6"), width: PaintLineSize);
@@ -501,10 +499,12 @@ namespace _2D_Graphics
         private void FillCurve_Click(object sender, EventArgs e)
         {
             DrawPressedBorder(filledCurveButton.CreateGraphics(), filledCurveButton);
-            Refresh();
+            
             CurveDone = false;
             BeziersDone = false;
             PolygonDone = false;
+            Refresh();
+
             Graphics g = paintingField.CreateGraphics();
             Pen p = new Pen(color: ColorTranslator.FromHtml("#1A9CB6"), width: PaintLineSize);
             Brush brush = new SolidBrush(color: ColorTranslator.FromHtml("#23cbff"));
