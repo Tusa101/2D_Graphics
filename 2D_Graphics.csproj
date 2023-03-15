@@ -61,6 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Form1.Keys.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form1.Events.cs">
       <SubType>Form</SubType>
     </Compile>

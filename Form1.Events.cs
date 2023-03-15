@@ -94,57 +94,171 @@ namespace _2D_Graphics
 
         private void Button3_Paint(object sender, PaintEventArgs e)
         {
-            DrawNormalBorder(e.Graphics, movePaintingButton);
+            if (movePaintingButton.Enabled)
+            {
+                DrawNormalBorder(e.Graphics, movePaintingButton);
+            }
+            else
+            {
+                DrawPressedBorder(e.Graphics, movePaintingButton);
+            }
+            
         }
 
         private void Button4_Paint(object sender, PaintEventArgs e)
         {
-            DrawNormalBorder(e.Graphics, clearButton);
+            if (clearButton.Enabled)
+            {
+                DrawNormalBorder(e.Graphics, clearButton);
+            }
+            else
+            {
+                DrawPressedBorder(e.Graphics, clearButton);
+            }
+            
         }
 
         private void Button5_Paint(object sender, PaintEventArgs e)
         {
-            DrawNormalBorder(e.Graphics, curveButton);
+            if (curveButton.Enabled)
+            {
+                DrawNormalBorder(e.Graphics, curveButton);
+            }
+            else
+            {
+                DrawPressedBorder(e.Graphics, curveButton);
+            }
         }
 
         private void Button6_Paint(object sender, PaintEventArgs e)
         {
-            DrawNormalBorder(e.Graphics, polygonButton);
+            if (polygonButton.Enabled)
+            {
+                DrawNormalBorder(e.Graphics, polygonButton);
+            }
+            else
+            {
+                DrawPressedBorder(e.Graphics, polygonButton);
+            }
+            
         }
 
         private void Button7_Paint(object sender, PaintEventArgs e)
         {
-            DrawNormalBorder(e.Graphics, beizerButton);
+            if (beizerButton.Enabled)
+            {
+                DrawNormalBorder(e.Graphics, beizerButton);
+            }
+            else
+            {
+                DrawPressedBorder(e.Graphics, beizerButton);
+            }
         }
 
         private void Button8_Paint(object sender, PaintEventArgs e)
         {
-            DrawNormalBorder(e.Graphics, filledCurveButton);
+            if (filledCurveButton.Enabled)
+            {
+                DrawNormalBorder(e.Graphics, filledCurveButton);
+            }
+            else
+            {
+                DrawPressedBorder(e.Graphics, filledCurveButton);
+            }
         }
         private void TraceButton_Paint(object sender, PaintEventArgs e)
         {
-            DrawNormalBorder(e.Graphics, traceButton);
-        }
-
-        private void MovePaintingButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            Graphics graphics = movePaintingButton.CreateGraphics();
-            DrawPressedBorder(graphics, movePaintingButton);
-
-            MoveDots();
-
-        }
-
-        private void MoveDots()
-        {
-            Timer moveTimer = new Timer
+            if (traceButton.Enabled)
             {
-                Interval = 5
-            };
-            moveTimer.Start();
-            moveTimer.Tick += new EventHandler(MoveTimerTickHandler);
-            
+                DrawNormalBorder(e.Graphics, traceButton);
+            }
+            else
+            {
+                DrawPressedBorder(e.Graphics, traceButton);
+            }
         }
+
+        private void TraceTimerTickHandler(object sender, EventArgs e)
+        {
+         
+            Graphics g = paintingField.CreateGraphics();
+            Pen p = new Pen(color: ColorTranslator.FromHtml("#1A9CB6"), width: PaintPenSize);
+            Brush brush = new SolidBrush(color: ColorTranslator.FromHtml("#1A9CB6"));
+            int[] temp = new int[2];
+            Text = paintingField.Width + "x" + paintingField.Height;
+            for (int i = 0; i < points.Length; i++)
+            {
+
+                if (points[i].X + _movingSpeed <= 0)
+                {
+                    Random random = new Random();
+                    temp[0] = 1;
+                    temp[1] = 2;
+                    _direction = temp[random.Next(0, 1)];
+                }
+                if (points[i].Y + _movingSpeed <= 0)
+                {
+                    Random random = new Random();
+                    temp[0] = 1;
+                    temp[1] = 4;
+                    _direction = temp[random.Next(0, 1)];
+                }
+                if (points[i].X + _movingSpeed >= paintingField.Width)
+                {
+                    Random random = new Random();
+                    temp[0] = 3;
+                    temp[1] = 4;
+                    _direction = temp[random.Next(0, 1)];
+                }
+                if (points[i].Y + _movingSpeed >= paintingField.Height)
+                {
+                    Random random = new Random();
+                    temp[0] = 2;
+                    temp[1] = 4;
+                    _direction = temp[random.Next(0, 1)];
+                }
+                switch (_direction)
+                {
+                    case 1:
+                        {
+                            points[i] = new Point(points[i].X + _movingSpeed, points[i].Y + _movingSpeed);
+                            DrawDot(g, p, brush, points[i]);
+                        }
+                        break;
+                    case 2:
+                        {
+                            points[i] = new Point(points[i].X + _movingSpeed, points[i].Y - _movingSpeed);
+                            DrawDot(g, p, brush, points[i]);
+                        }
+                        break;
+                    case 3:
+                        {
+                            points[i] = new Point(points[i].X - _movingSpeed, points[i].Y - _movingSpeed);
+                            DrawDot(g, p, brush, points[i]);
+                        }
+                        break;
+                    case 4:
+                        {
+                            points[i] = new Point(points[i].X - _movingSpeed, points[i].Y + _movingSpeed);
+                            DrawDot(g, p, brush, points[i]);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                Brush brushFill = new SolidBrush(color: ColorTranslator.FromHtml("#23cbff"));
+                try
+                {
+                    CurveFilledDone = true;
+                    g.FillClosedCurve(brushFill, points);
+                    g.DrawClosedCurve(p, points);
+                }
+                catch (Exception)
+                { }
+
+            }
+        }
+
 
         private void MoveTimerTickHandler(object sender, EventArgs e)
         {
@@ -152,45 +266,68 @@ namespace _2D_Graphics
             Graphics g = paintingField.CreateGraphics();
             Pen p = new Pen(color: ColorTranslator.FromHtml("#1A9CB6"), width: PaintPenSize);
             Brush brush = new SolidBrush(color: ColorTranslator.FromHtml("#1A9CB6"));
+            int[] temp= new int[2];
+            Text = paintingField.Width + "x" + paintingField.Height;
             for (int i = 0; i < points.Length; i++)
             {
-                if (_direction ==0)//down
+
+                if(points[i].X + _movingSpeed <= 0)
                 {
-                    if(points[i].X + _moveSpeed >= paintingField.Width || points[i].Y + _moveSpeed >= paintingField.Height)
-                    {
-                        _direction = 1;
-                    }
-                    points[i] = new Point(points[i].X + _moveSpeed, points[i].Y + _moveSpeed);
-                    DrawDot(g, p, brush, points[i]);
+                    Random random = new Random();
+                    temp[0] = 1;
+                    temp[1] = 2;
+                    _direction = temp[random.Next(0,1)];   
                 }
-                if (_direction == 1)//right
+                if (points[i].Y + _movingSpeed <= 0)
                 {
-                    if (points[i].X + _moveSpeed >= paintingField.Width || points[i].Y + _moveSpeed <=0)
-                    {
-                        _direction = 2;
-                    }
-                    points[i] = new Point(points[i].X + _moveSpeed, points[i].Y - _moveSpeed);
-                    DrawDot(g, p, brush, points[i]);
+                    Random random = new Random();
+                    temp[0] = 1;
+                    temp[1] = 4;
+                    _direction = temp[random.Next(0, 1)];
                 }
-                if (_direction == 2)//up
+                if (points[i].X + _movingSpeed >= paintingField.Width)
                 {
-                    if (points[i].X + _moveSpeed <= 0 || points[i].Y + _moveSpeed <= 0)
-                    {
-                        _direction = 3;
-                    }
-                    points[i] = new Point(points[i].X - _moveSpeed, points[i].Y - _moveSpeed);
-                    DrawDot(g, p, brush, points[i]);
+                    Random random = new Random();
+                    temp[0] = 3;
+                    temp[1] = 4;
+                    _direction = temp[random.Next(0, 1)];
                 }
-                if (_direction == 3)//left
+                if (points[i].Y + _movingSpeed >= paintingField.Height)
                 {
-                    if (points[i].X + _moveSpeed <= 0 || points[i].Y + _moveSpeed >= paintingField.Height)
-                    {
-                        _direction = 0;
-                    }
-                    points[i] = new Point(points[i].X - _moveSpeed, points[i].Y + _moveSpeed);
-                    DrawDot(g, p, brush, points[i]);
+                    Random random = new Random();
+                    temp[0] = 2;
+                    temp[1] = 4;
+                    _direction = temp[random.Next(0, 1)];
                 }
-                
+                switch (_direction)
+                {
+                    case 1:
+                        {
+                            points[i] = new Point(points[i].X + _movingSpeed, points[i].Y + _movingSpeed);
+                            DrawDot(g, p, brush, points[i]);
+                        }
+                        break;
+                    case 2:
+                        {
+                            points[i] = new Point(points[i].X + _movingSpeed, points[i].Y - _movingSpeed);
+                            DrawDot(g, p, brush, points[i]);
+                        }
+                        break;
+                    case 3:
+                        {
+                            points[i] = new Point(points[i].X - _movingSpeed, points[i].Y - _movingSpeed);
+                            DrawDot(g, p, brush, points[i]);
+                        }
+                        break;
+                    case 4:
+                        {
+                            points[i] = new Point(points[i].X - _movingSpeed, points[i].Y + _movingSpeed);
+                            DrawDot(g, p, brush, points[i]);
+                        }
+                        break;
+                    default:
+                        break;
+                }   
             }
         }
 
@@ -224,9 +361,39 @@ namespace _2D_Graphics
             Graphics graphics = dotsButton.CreateGraphics();
             DrawNormalBorder(graphics, dotsButton);
         }
+        private void ClearButton_MouseHover(object sender, EventArgs e)
+        {
+            Graphics graphics = clearButton.CreateGraphics();
+            DrawHoveredBorder(graphics, clearButton);
+        }
+
+        private void ClearButton_MouseLeave(object sender, EventArgs e)
+        {
+            Graphics graphics = clearButton.CreateGraphics();
+            DrawNormalBorder(graphics, clearButton);
+        }
 
         private void PictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
+            if (points.Length >=0)
+            {
+                clearButton.Enabled = true;
+                movePaintingButton.Enabled = true;  
+            }
+            if (points.Length >=1)
+            {
+                curveButton.Enabled = true;
+                polygonButton.Enabled = true;
+            }
+            if(points.Length >=2)
+            {
+                traceButton.Enabled = true;
+                filledCurveButton.Enabled = true;
+            }
+            if (points.Length >=3)
+            {
+                beizerButton.Enabled = true;
+            }
             if(!_movingPoint)
             {
                 CurveDone = false;
@@ -279,6 +446,16 @@ namespace _2D_Graphics
         }
         private void Clear_Click(object sender, EventArgs e)
         {
+            movePaintingButton.Enabled = false;
+            clearButton.Enabled = false;
+            curveButton.Enabled = false;
+            traceButton.Enabled = false;
+            filledCurveButton.Enabled = false;
+            polygonButton.Enabled = false;
+            beizerButton.Enabled = false;
+
+            Graphics g = clearButton.CreateGraphics();
+            DrawPressedBorder(g, clearButton);
             CurveDone = false;
             PolygonDone = false;
             BeziersDone = false;
@@ -289,6 +466,7 @@ namespace _2D_Graphics
         private void Polygon_Click(object sender, EventArgs e)
         {
             Refresh();
+            DrawPressedBorder(polygonButton.CreateGraphics(), polygonButton);
             CurveDone = false;
             BeziersDone = false;
             CurveFilledDone = false;
@@ -305,10 +483,12 @@ namespace _2D_Graphics
         private void Beziers_Click(object sender, EventArgs e)
         {
             Refresh();
+            
             CurveDone = false;
             CurveFilledDone = false;
             PolygonDone = false;
             Graphics g = paintingField.CreateGraphics();
+            DrawPressedBorder(beizerButton.CreateGraphics(), beizerButton);
             Pen p = new Pen(color: ColorTranslator.FromHtml("#1A9CB6"), width: PaintLineSize);
             try
             {
@@ -317,12 +497,10 @@ namespace _2D_Graphics
             }
             catch (Exception)
             { }
-            
-            
-            
         }
         private void FillCurve_Click(object sender, EventArgs e)
         {
+            DrawPressedBorder(filledCurveButton.CreateGraphics(), filledCurveButton);
             Refresh();
             CurveDone = false;
             BeziersDone = false;
@@ -339,7 +517,7 @@ namespace _2D_Graphics
             catch (Exception)
             { }
         }
-        private void paintingField_MouseDown(object sender, MouseEventArgs e)
+        private void PaintingField_MouseDown(object sender, MouseEventArgs e)
         {
             for (int i = 0; i < points.Length; i++)
             {
@@ -354,7 +532,7 @@ namespace _2D_Graphics
             }
         }
 
-        private void paintingField_MouseMove(object sender, MouseEventArgs e)
+        private void PaintingField_MouseMove(object sender, MouseEventArgs e)
         {
             if (_movingPoint)
             {
@@ -363,7 +541,7 @@ namespace _2D_Graphics
             }
         }
 
-        private void paintingField_MouseUp(object sender, MouseEventArgs e)
+        private void PaintingField_MouseUp(object sender, MouseEventArgs e)
         {
             _movingPoint = false;
         }

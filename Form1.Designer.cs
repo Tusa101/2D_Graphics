@@ -83,8 +83,8 @@
             this.movePaintingButton.TabIndex = 2;
             this.movePaintingButton.Text = "Движение";
             this.movePaintingButton.UseVisualStyleBackColor = false;
+            this.movePaintingButton.Click += new System.EventHandler(this.MovePaintingButton_Click);
             this.movePaintingButton.Paint += new System.Windows.Forms.PaintEventHandler(this.Button3_Paint);
-            this.movePaintingButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MovePaintingButton_MouseClick);
             this.movePaintingButton.MouseLeave += new System.EventHandler(this.MovePaintingButton_MouseLeave);
             this.movePaintingButton.MouseHover += new System.EventHandler(this.MovePaintingButton_MouseHover);
             // 
@@ -101,6 +101,8 @@
             this.clearButton.UseVisualStyleBackColor = false;
             this.clearButton.Click += new System.EventHandler(this.Clear_Click);
             this.clearButton.Paint += new System.Windows.Forms.PaintEventHandler(this.Button4_Paint);
+            this.clearButton.MouseLeave += new System.EventHandler(this.ClearButton_MouseLeave);
+            this.clearButton.MouseHover += new System.EventHandler(this.ClearButton_MouseHover);
             // 
             // curveButton
             // 
@@ -167,9 +169,9 @@
             this.paintingField.TabIndex = 8;
             this.paintingField.TabStop = false;
             this.paintingField.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PictureBox1_MouseClick);
-            this.paintingField.MouseDown += new System.Windows.Forms.MouseEventHandler(this.paintingField_MouseDown);
-            this.paintingField.MouseMove += new System.Windows.Forms.MouseEventHandler(this.paintingField_MouseMove);
-            this.paintingField.MouseUp += new System.Windows.Forms.MouseEventHandler(this.paintingField_MouseUp);
+            this.paintingField.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PaintingField_MouseDown);
+            this.paintingField.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PaintingField_MouseMove);
+            this.paintingField.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PaintingField_MouseUp);
             // 
             // traceButton
             // 
@@ -180,6 +182,7 @@
             this.traceButton.TabIndex = 9;
             this.traceButton.Text = "След";
             this.traceButton.UseVisualStyleBackColor = true;
+            this.traceButton.Click += new System.EventHandler(this.TraceButton_Click);
             this.traceButton.Paint += new System.Windows.Forms.PaintEventHandler(this.TraceButton_Paint);
             // 
             // Form1
@@ -205,8 +208,10 @@
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "Form1";
+            
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.paintingField)).EndInit();
             this.ResumeLayout(false);
 

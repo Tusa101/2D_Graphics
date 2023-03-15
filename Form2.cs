@@ -12,6 +12,7 @@ namespace _2D_Graphics
 {
     public partial class Form2 : Form
     {
+        private static bool _applyDone = false;
         private static int _prevTrackBar1Value = 4;
         private static int _prevTrackBar2Value = 4;
         private static int PrevTrackBar1Value
@@ -29,7 +30,7 @@ namespace _2D_Graphics
             StartPosition = FormStartPosition.CenterParent;
             InitializeComponent();
             //FormBorderStyle = FormBorderStyle.FixedSingle;
-            MinimumSize = new Size(370, 170);
+            MinimumSize = new Size(370, 180);
             Size = new Size(trackBar1.Width + label1.Width, 
                             label1.Height*3 + trackBar1.Height*3);
             BackColor = ColorTranslator.FromHtml("#c3f5ff");
@@ -76,11 +77,18 @@ namespace _2D_Graphics
             label4.Anchor = AnchorStyles.None;
             label4.Location = new Point(trackBar2.Location.X + trackBar2.Width - label4.Width, 
                                         trackBar2.Location.Y - label4.Height);
+            applyButton.Enabled = false;
+            applyButton.Location = new Point(trackBar2.Location.X + trackBar2.Width - applyButton.Width,
+                                        trackBar2.Location.Y + applyButton.Height);
+            applyButton.Anchor = AnchorStyles.None;
+            applyButton.Font = new Font("Ermilov", 12);
+            applyButton.Text = "Применить";
 
         }
 
         private void Form2_Load(object sender, EventArgs e)
         {
+            
             trackBar1.Value = PrevTrackBar1Value;
             trackBar2.Value = PrevTrackBar2Value;
             label2.Text = String.Format("Текущее значение: {0}", PrevTrackBar1Value);
@@ -89,8 +97,9 @@ namespace _2D_Graphics
 
         private void TrackBar1_Scroll(object sender, EventArgs e)
         {
+            applyButton.Enabled = true;
             label2.Text = String.Format("Текущее значение: {0}", trackBar1.Value);
-            PrevTrackBar1Value = trackBar1.Value;
+            
             (this.Owner as Form1).PaintLineSize = trackBar1.Value;
             (this.Owner as Form1).Refresh();
 
@@ -98,11 +107,35 @@ namespace _2D_Graphics
 
         private void TrackBar2_Scroll(object sender, EventArgs e)
         {
+            applyButton.Enabled = true;
             label4.Text = String.Format("Текущее значение: {0}", trackBar2.Value);
             (this.Owner as Form1).PaintPenSize = trackBar2.Value;
-            PrevTrackBar2Value = trackBar2.Value;
+            
             (this.Owner as Form1).Refresh();
 
+        }
+
+        private void ApplyButton_Click(object sender, EventArgs e)
+        {
+            _applyDone = true;
+
+            PrevTrackBar2Value = trackBar2.Value;
+            (this.Owner as Form1).PaintPenSize = trackBar2.Value;
+            
+            PrevTrackBar1Value = trackBar1.Value;
+            (this.Owner as Form1).PaintLineSize = trackBar1.Value;
+            this.Close();
+        }
+
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (!_applyDone)
+            {
+                (this.Owner as Form1).PaintPenSize = PrevTrackBar1Value;
+                (this.Owner as Form1).PaintLineSize = PrevTrackBar2Value;
+                (this.Owner as Form1).Refresh();
+            }
+            
         }
     }
 }

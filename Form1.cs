@@ -14,7 +14,8 @@ namespace _2D_Graphics
 {
     public partial class Form1 : Form
     {   
-        private static int _moveSpeed = 5;
+        private static int _movingSpeed = 5;
+        private static bool _movingEnabled = false;
         private static int _direction = (new Random()).Next(0,3);
         private static bool _beziersDone = false;
         private static bool _curveDone = false;
@@ -22,7 +23,8 @@ namespace _2D_Graphics
         private static bool _curveFilledDone = false;
         private static int _draggingPoint;
         private static bool _movingPoint;
-
+        private static Timer moveTimer = new Timer();
+        private static Timer traceTimer = new Timer();
         public Size ButtonDefaultSize
         { get; set; }
         public Point ButtonDefaultLocation
@@ -86,7 +88,11 @@ namespace _2D_Graphics
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = ColorTranslator.FromHtml("#c3f5ff");
             this.MinimumSize = new Size(Screen.PrimaryScreen.WorkingArea.Size.Width /2, Screen.PrimaryScreen.WorkingArea.Size.Height/2);
-            
+            KeyPreview = true;
+            KeyDown += new KeyEventHandler(Form1_KeyDown);
+
+            moveTimer.Tick += new EventHandler(MoveTimerTickHandler);
+            traceTimer.Tick += new EventHandler(TraceTimerTickHandler);
 
             Size = new Size(Screen.PrimaryScreen.WorkingArea.Size.Width, Screen.PrimaryScreen.WorkingArea.Size.Height);
             ButtonDefaultSize = new Size(400, Screen.PrimaryScreen.WorkingArea.Height / 11);
@@ -130,7 +136,7 @@ namespace _2D_Graphics
                                              dotsButton.Location.Y + dotsButton.Height / 2);
             PaintFieldDefaultSize = new Size(Screen.PrimaryScreen.WorkingArea.Width -
                                         paintingField.Location.X -
-                                        2 * (Screen.PrimaryScreen.WorkingArea.Height / 9 -
+                                        50 * (Screen.PrimaryScreen.WorkingArea.Height / 9 -
                                         Screen.PrimaryScreen.WorkingArea.Height / 10),
                                         filledCurveButton.Location.Y);
             paintingField.Location = PaintFieldDefaultLocation;
@@ -176,7 +182,19 @@ namespace _2D_Graphics
             filledCurveButton.Font = new Font("Ermilov", 20);
             traceButton.Font = new Font("Ermilov", 20);
             DoubleBuffered = true;
+
+            dotsButton.Enabled = true;
+            paramsButton.Enabled = true;
+            movePaintingButton.Enabled = true;
+            clearButton.Enabled = false;
+            curveButton.Enabled = false;
+            traceButton.Enabled = false;
+            filledCurveButton.Enabled = false;
+            polygonButton.Enabled = false;
+            beizerButton.Enabled = false;
         }
+
+
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
             dotsButton.Size = new Size(ButtonDefaultSize.Width * this.Width / Screen.PrimaryScreen.WorkingArea.Width, 
@@ -240,7 +258,7 @@ namespace _2D_Graphics
 
             paintingField.Size = new Size(Screen.PrimaryScreen.WorkingArea.Width -
                                         paintingField.Location.X -
-                                        2 * (Screen.PrimaryScreen.WorkingArea.Height / 9 -
+                                        50 * (Screen.PrimaryScreen.WorkingArea.Height / 9 -
                                         Screen.PrimaryScreen.WorkingArea.Height / 10),
                                         filledCurveButton.Location.Y);
             paintingField.Location = new Point(ButtonDefaultLocation.X +
@@ -249,6 +267,8 @@ namespace _2D_Graphics
                                              Screen.PrimaryScreen.WorkingArea.Height / 10,
                                              dotsButton.Location.Y + dotsButton.Height / 2);
         }
+        //apply
+        //
         public Point MakeButtonLocation(int buttonNumberMinus1, int buttonNumberMinus2)
         {
             return new Point(ButtonDefaultLocation.X,
@@ -309,6 +329,42 @@ namespace _2D_Graphics
                     catch (Exception)
                     { }
                 }
+            }
+        }
+
+        private void MovePaintingButton_Click(object sender, EventArgs e)
+        {
+            Graphics graphics = movePaintingButton.CreateGraphics();
+            DrawPressedBorder(graphics, movePaintingButton);
+            _movingEnabled = !_movingEnabled;
+            if (_movingEnabled)
+            {
+                moveTimer.Interval = 5;
+                moveTimer.Start();
+            }
+
+            else
+            {
+                Refresh();
+                moveTimer.Stop();
+            }
+        }
+
+        private void TraceButton_Click(object sender, EventArgs e)
+        {
+            Graphics graphics = traceButton.CreateGraphics();
+            DrawPressedBorder(graphics, traceButton);
+            _movingEnabled = !_movingEnabled;
+            if (_movingEnabled)
+            {
+                traceTimer.Interval = 5;
+                traceTimer.Start();
+            }
+
+            else
+            {
+                Refresh();
+                traceTimer.Stop();
             }
         }
 

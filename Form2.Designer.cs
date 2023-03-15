@@ -34,6 +34,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
+            this.applyButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.SuspendLayout();
@@ -45,7 +46,6 @@
             this.trackBar1.Size = new System.Drawing.Size(300, 56);
             this.trackBar1.TabIndex = 0;
             this.trackBar1.Scroll += new System.EventHandler(this.TrackBar1_Scroll);
-            
             // 
             // label1
             // 
@@ -91,11 +91,23 @@
             this.trackBar2.TabIndex = 5;
             this.trackBar2.Scroll += new System.EventHandler(this.TrackBar2_Scroll);
             // 
+            // applyButton
+            // 
+            this.applyButton.Font = new System.Drawing.Font("Ermilov", 12F);
+            this.applyButton.Location = new System.Drawing.Point(189, 191);
+            this.applyButton.Name = "applyButton";
+            this.applyButton.Size = new System.Drawing.Size(154, 36);
+            this.applyButton.TabIndex = 6;
+            this.applyButton.Text = "Применить";
+            this.applyButton.UseVisualStyleBackColor = true;
+            this.applyButton.Click += new System.EventHandler(this.ApplyButton_Click);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(382, 453);
+            this.Controls.Add(this.applyButton);
             this.Controls.Add(this.trackBar2);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -104,6 +116,7 @@
             this.Controls.Add(this.trackBar1);
             this.Name = "Form2";
             this.Text = "Form2";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form2_FormClosed);
             this.Load += new System.EventHandler(this.Form2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
@@ -120,5 +133,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TrackBar trackBar2;
+        private System.Windows.Forms.Button applyButton;
     }
 }
